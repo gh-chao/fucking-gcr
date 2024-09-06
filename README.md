@@ -5,15 +5,19 @@
 1. 从 stdin 读取 k8s yaml
 2. 自动替换镜像地址
 3. 输出替换后的yaml 到stdout
-4. 将镜像同步命令写入到 run-skopeo-copy.sh
+4. 将镜像同步命令写入到 copy-image.sh
 
+
+### 依赖
+
+* 镜像同步工具 [crane](https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md)
+
+使用 brew 安装
+```bash
+brew install crane
+```
 
 ### 安装
-
-安装 skopeo
-```bash
-brew install skopeo
-```
 
 使用 make 安装
 ```bash
@@ -32,12 +36,12 @@ cp bin/fucking-gcr /usr/local/bin
 -mirror string
     指定镜像地址 (default "registry.baidubce.com/fucking-gcr")
 -script-name string
-    镜像同步脚本名称 (default "run-skopeo-copy.sh")
+    镜像同步脚本名称 (default "copy-image.sh")
 -whitelist string
     指定白名单 (default "gcr.io,docker.io")
 ```
 
-### 使用方式
+### 使用
 
 以 wordpress 为例
 
@@ -53,7 +57,7 @@ brew install homeport/tap/dyff
 dyff bw wordpress-deployment.yaml wordpress-deployment-patched.yaml
 
 # 将镜像同步到国内源（这一步需要使用代理，你懂的）
-https_proxy=127.0.0.1:1234 ./run-skopeo-copy.sh
+https_proxy=127.0.0.1:1234 ./copy-image.sh
 
 # 安装
 kubectl apply -f wordpress-deployment-patched.yaml
@@ -67,7 +71,7 @@ curl -s https://kubernetes.io/examples/application/wordpress/wordpress-deploymen
 | kubectl apply -f -
 ```
 
-在helm中使用
+### 在helm中使用
 
 ```bash
 # 添加 --post-renderer 和  --post-renderer-args 参数即可

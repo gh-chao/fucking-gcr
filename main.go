@@ -28,7 +28,7 @@ var (
 func init() {
 	flag.StringVar(&mirror, "mirror", "registry.baidubce.com/fucking-gcr", "指定镜像地址")
 	flag.StringVar(&whitelist, "whitelist", "gcr.io,docker.io", "指定白名单")
-	flag.StringVar(&scriptName, "script-name", "run-skopeo-copy.sh", "镜像同步脚本名称")
+	flag.StringVar(&scriptName, "script-name", "copy-image.sh", "镜像同步脚本名称")
 	flag.Parse()
 }
 
@@ -102,7 +102,7 @@ func WriteImageCopyScript(name string, results map[string]string) {
 	defer f.Close()
 
 	for origin, dist := range results {
-		fmt.Fprintf(f, "skopeo copy --multi-arch=all docker://%s docker://%s\n", origin, dist)
+		fmt.Fprintf(f, "crane copy --platform=linux/amd64 %s %s", origin, dist)
 	}
 }
 
