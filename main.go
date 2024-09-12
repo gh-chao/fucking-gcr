@@ -102,7 +102,7 @@ func WriteImageCopyScript(name string, results map[string]string) {
 	defer f.Close()
 
 	for origin, dist := range results {
-		fmt.Fprintf(f, "crane copy --platform=linux/amd64 %s %s", origin, dist)
+		fmt.Fprintf(f, "crane copy --platform=linux/amd64 %s %s\n", origin, dist)
 	}
 }
 
